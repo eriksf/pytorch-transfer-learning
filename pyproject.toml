@@ -1,0 +1,50 @@
+[project]
+name = "pytorch-transfer-learning"
+version = "0.1.0"
+description = "A tool to train a CNN for image classification using transfer learning (from https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html)"
+authors = [
+    {name = "Erik Ferlanti",email = "eferlanti@tacc.utexas.edu"}
+]
+license = "BSD 3-Clause"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "torch (>=2.6.0,<3.0.0)",
+    "torchvision (>=0.21.0,<0.22.0)",
+    "scipy (>=1.15.2,<2.0.0)",
+    "matplotlib (>=3.10.1,<4.0.0)",
+    "rich (>=13.9.4,<14.0.0)",
+    "click (>=8.1.8,<9.0.0)",
+    "click-loglevel (>=0.6.0,<0.7.0)"
+]
+
+[tool.poetry]
+packages = [{include = "pytorch_transfer_learning"}]
+repository = "https://github.com/eriksf/pytorch-transfer-learning"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+pytest-cov = "^6.0.0"
+ruff = "^0.11.1"
+
+[tool.poetry.scripts]
+train = "pytorch_transfer_learning.train:main"
+predict = "pytorch_transfer_learning.predict:main"
+
+[tool.ruff]
+exclude = [".git", ".ruff_cache", ".vscode"]
+line-length = 300
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+fixable = ["ALL"]
+unfixable = ["F401"]
+
+[tool.pytest.ini_options]
+addopts = "--verbose --cov=pytorch_transfer_learning"
+
+[tool.poetry_bumpversion.file."app/version.py"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
