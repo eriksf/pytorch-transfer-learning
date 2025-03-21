@@ -35,7 +35,6 @@ These two major transfer learning scenarios look as follows:
 
 import logging
 import os
-import sys
 
 import click
 import torch
@@ -44,7 +43,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 from click_loglevel import LogLevel
-from logging_tree import printout
 from rich.console import Console
 from rich.logging import RichHandler
 from torch.optim import lr_scheduler
@@ -93,8 +91,6 @@ def main(log_level, log_file, data_dir, scenario):
     """Train a CNN for hymenoptera classification using transfer learning
     from the pre-trained model ResNet18.
     """
-    printout()
-    sys.exit(0)
     console.print("[bold blue]Training a CNN for hymenoptera classification using transfer learning[/bold blue]")
     console.print(f"PyTorch version: [green]{torch.__version__}[/green]")
 

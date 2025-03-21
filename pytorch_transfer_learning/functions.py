@@ -106,10 +106,10 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
                     if phase == 'val' and epoch_acc > best_acc:
                         best_acc = epoch_acc
                         torch.save(model.state_dict(), best_model_params_path)
-                        console.print("saving model parameters...")
-                        logger.debug(f"Epoch accuracy is better than current best, saving model parameters will be saved to {best_model_params_path}")
+                        console.print("[yellow]Epoch accuracy is better than current best, saving model...[/yellow]")
+                        logger.debug(f"Epoch accuracy is better than current best, model parameters will be saved to {best_model_params_path}")
 
-                console.print()
+                #console.print()
 
             time_elapsed = time.time() - since
             console.print('-' * 10)
