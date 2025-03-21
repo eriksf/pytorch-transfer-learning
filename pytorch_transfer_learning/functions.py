@@ -109,11 +109,12 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
                         console.print("saving model parameters...")
                         logger.debug(f"Epoch accuracy is better than current best, saving model parameters will be saved to {best_model_params_path}")
 
-                #console.print()
+                console.print()
 
             time_elapsed = time.time() - since
-            console.print(f'\nTraining complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
-            console.print(f'Best val Acc: {best_acc:4f}')
+            console.print('-' * 10)
+            console.print(f'[green]Training complete in [bold]{time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s[/bold][/green]')
+            console.print(f'Best val Acc: [green]{best_acc:4f}[/green]')
 
         # load best model weights
         model.load_state_dict(torch.load(best_model_params_path, weights_only=True))
