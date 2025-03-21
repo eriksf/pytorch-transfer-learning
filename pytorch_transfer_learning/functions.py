@@ -109,11 +109,11 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
                         console.print("[yellow]Epoch accuracy is better than current best, saving model...[/yellow]")
                         logger.debug(f"Epoch accuracy is better than current best, model parameters will be saved to {best_model_params_path}")
 
-                #console.print()
 
             time_elapsed = time.time() - since
+            console.print()
             console.print('-' * 10)
-            console.print(f'[green]Training complete in [bold]{time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s[/bold][/green]')
+            console.print(f'Training complete in [green][bold]{time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s[/bold][/green]')
             console.print(f'Best val Acc: [green]{best_acc:4f}[/green]')
 
         # load best model weights
