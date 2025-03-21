@@ -57,7 +57,7 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
 
         with console.status("[magenta]Training model...") as status:
             for epoch in range(num_epochs):
-                status.update(status=f'\nRunning Epoch {epoch}')
+                status.update(status=f'Running Epoch {epoch}')
                 console.print(f'\nEpoch {epoch}/{num_epochs - 1}')
                 console.print('-' * 10)
 
@@ -106,9 +106,10 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
                     if phase == 'val' and epoch_acc > best_acc:
                         best_acc = epoch_acc
                         torch.save(model.state_dict(), best_model_params_path)
+                        console.print("saving model parameters...")
                         logger.debug(f"Epoch accuracy is better than current best, saving model parameters will be saved to {best_model_params_path}")
 
-                console.print()
+                #console.print()
 
             time_elapsed = time.time() - since
             console.print(f'\nTraining complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
