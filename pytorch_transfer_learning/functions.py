@@ -57,7 +57,7 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
 
         with console.status("[magenta]Training model...") as status:
             for epoch in range(num_epochs):
-                status.update(status=f'Running Epoch {epoch}')
+                status.update(status=f'Training Epoch {epoch}')
                 console.print(f'\nEpoch {epoch}/{num_epochs - 1}')
                 console.print('-' * 10)
 

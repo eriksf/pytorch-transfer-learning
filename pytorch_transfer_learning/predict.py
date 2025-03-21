@@ -60,7 +60,7 @@ def set_logging_level(ctx, param, value):
     """
     Callback function for click that sets the logging level.
     """
-    logger.setLevel(value)
+    logging.getLogger('pytorch_transfer_learning').setLevel(value)
     return value
 
 
@@ -72,7 +72,7 @@ def set_log_file(ctx, param, value):
         fileHandler = logging.FileHandler(value, mode='w')
         logFormatter = logging.Formatter(LOG_FORMAT)
         fileHandler.setFormatter(logFormatter)
-        logger.addHandler(fileHandler)
+        logging.getLogger('pytorch_transfer_learning').addHandler(fileHandler)
     return value
 
 @click.command()
