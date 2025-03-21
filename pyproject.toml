@@ -8,47 +8,45 @@ authors = [
 license = "BSD 3-Clause"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = [
-    "torch (==2.5.1)",
-    "torchvision (==0.20.1)",
-    "scipy (>=1.15.2,<2.0.0)",
-    "matplotlib (>=3.10.1,<4.0.0)",
-    "rich (>=13.9.4,<14.0.0)",
-    "click (>=8.1.8,<9.0.0)",
-    "click-loglevel (>=0.6.0,<0.7.0)"
-]
+dynamic = [ "dependencies" ]
+
+[project.scripts]
+train = "pytorch_transfer_learning.train:main"
+predict = "pytorch_transfer_learning.predict:main"
+
+[project.urls]
+repository = "https://github.com/eriksf/pytorch-transfer-learning"
 
 [tool.poetry]
 packages = [{include = "pytorch_transfer_learning"}]
-repository = "https://github.com/eriksf/pytorch-transfer-learning"
 
 [tool.poetry.dependencies]
-torch = [{source="pytorch-cpu", platform="darwin", markers = "extra=='cpu' and extra!='cuda'"},
-        {source="pytorch", platform="linux", markers = "extra=='cuda' and extra!='cpu'"}
+torch = [
+    {url = "https://download.pytorch.org/whl/cpu/torch-2.6.0-cp312-none-macosx_11_0_arm64.whl", markers = "sys_platform == 'darwin'"},
+    {url = "https://download.pytorch.org/whl/cu126/torch-2.6.0%2Bcu126-cp312-cp312-linux_aarch64.whl", markers = "sys_platform == 'linux' and platform_machine == 'aarch64'"},
+    {url = "https://download.pytorch.org/whl/cu126/torch-2.6.0%2Bcu126-cp312-cp312-manylinux_2_28_x86_64.whl", markers = "sys_platform == 'linux' and platform_machine == 'x86_64'"},
 ]
-torchvision = [{source="pytorch-cpu", platform="darwin", markers = "extra=='cpu' and extra!='cuda'"},
-               {source="pytorch", platform="linux", markers = "extra=='cuda' and extra!='cpu'"}
+torchvision = [
+    {url = "https://download.pytorch.org/whl/cpu/torchvision-0.21.0-cp312-cp312-macosx_11_0_arm64.whl", markers = "sys_platform == 'darwin'"},
+    {url = "https://download.pytorch.org/whl/cu126/torchvision-0.21.0-cp312-cp312-linux_aarch64.whl", markers = "sys_platform == 'linux' and platform_machine == 'aarch64'"},
+    {url = "https://download.pytorch.org/whl/cu126/torchvision-0.21.0%2Bcu126-cp312-cp312-linux_x86_64.whl", markers = "sys_platform == 'linux' and platform_machine == 'x86_64'"},
 ]
+scipy = "^1.15.2"
+matplotlib = "^3.10.1"
+rich = "^13.9.4"
+click = "^8.1.8"
+click-loglevel = "^0.6.0"
+
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-cov = "^6.0.0"
 ruff = "^0.11.1"
 
-[tool.poetry.scripts]
-train = "pytorch_transfer_learning.train:main"
-predict = "pytorch_transfer_learning.predict:main"
-
 [[tool.poetry.source]]
 name = "pytorch"
-url = "https://download.pytorch.org/whl/cu124"
-priority = "explicit"
-
-
-[[tool.poetry.source]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-priority = "explicit"
+url = "https://download.pytorch.org/whl/cu126"
+priority = "supplemental"
 
 [tool.ruff]
 exclude = [".git", ".ruff_cache", ".vscode"]
