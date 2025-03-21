@@ -22,6 +22,14 @@ dependencies = [
 packages = [{include = "pytorch_transfer_learning"}]
 repository = "https://github.com/eriksf/pytorch-transfer-learning"
 
+[tool.poetry.dependencies]
+torch = [{source="pytorch-cpu", platform="darwin", markers = "extra=='cpu' and extra!='cuda'"},
+        {source="pytorch", platform="linux", markers = "extra=='cuda' and extra!='cpu'"}
+]
+torchvision = [{source="pytorch-cpu", platform="darwin", markers = "extra=='cpu' and extra!='cuda'"},
+               {source="pytorch", platform="linux", markers = "extra=='cuda' and extra!='cpu'"}
+]
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-cov = "^6.0.0"
@@ -30,6 +38,17 @@ ruff = "^0.11.1"
 [tool.poetry.scripts]
 train = "pytorch_transfer_learning.train:main"
 predict = "pytorch_transfer_learning.predict:main"
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu124"
+priority = "explicit"
+
+
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
 
 [tool.ruff]
 exclude = [".git", ".ruff_cache", ".vscode"]
