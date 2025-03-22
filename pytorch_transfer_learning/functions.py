@@ -186,10 +186,11 @@ def save_model(model, class_names, model_name, output_dir):
     return model_path
 
 def load_model(model_path):
+    logger.debug(f"Loading model from {model_path}")
     checkpoint = torch.load(model_path)
     class_names = checkpoint['class_names']
 
-    model = models.resnet18(pretrained=False)
+    model = models.resnet18(weights='IMAGENET1K_V1')
     model.fc = nn.Linear(model.fc.in_features, len(class_names))
     model.load_state_dict(checkpoint['state_dict'])
     return model, class_names
