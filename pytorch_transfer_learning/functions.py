@@ -151,8 +151,8 @@ def visualize_model(device, model, dataloaders, class_names, image_name, num_ima
 
 
 def visualize_model_predictions(device, model, class_names, img_path):
-    was_training = model.training
     model.eval()
+    model.to(device)
 
     img = Image.open(img_path)
     img = data_transforms['val'](img)
@@ -167,8 +167,6 @@ def visualize_model_predictions(device, model, class_names, img_path):
         ax.axis('off')
         ax.set_title(f'Predicted: {class_names[preds[0]]}')
         image_show(img.cpu().data[0], f"{model.name}_custom_prediction")
-
-        model.train(mode=was_training)
 
 
 def save_model(model, class_names, model_name, output_dir):
