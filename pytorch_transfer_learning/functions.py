@@ -1,5 +1,6 @@
 import logging
 import os
+import pathlib
 import time
 from tempfile import TemporaryDirectory
 
@@ -166,7 +167,7 @@ def visualize_model_predictions(device, model, class_names, img_path):
         ax = plt.subplot(2,2,1)
         ax.axis('off')
         ax.set_title(f'Predicted: {class_names[preds[0]]}')
-        image_show(img.cpu().data[0], f"{model.name}_custom_prediction")
+        image_show(img.cpu().data[0], f"{model.name}_prediction")
 
 
 def save_model(model, class_names, model_name, output_dir):
@@ -185,10 +186,15 @@ def save_model(model, class_names, model_name, output_dir):
 
 def load_model(model_path):
     logger.debug(f"Loading model from {model_path}")
+    path = pathlib.Path(model_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Model file not found: {model_path}")
+
     checkpoint = torch.load(model_path)
     class_names = checkpoint['class_names']
 
     model = models.resnet18(weights='IMAGENET1K_V1')
     model.fc = nn.Linear(model.fc.in_features, len(class_names))
     model.load_state_dict(checkpoint['state_dict'])
+    model.name = path.stem
     return model, class_names
