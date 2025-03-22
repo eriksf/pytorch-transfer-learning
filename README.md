@@ -60,6 +60,7 @@ Options:
                                   Transfer learning scenario.  [default:
                                   finetuning]
   --model-dir PATH                Set the model directory  [default: .]
+  --output-dir PATH               Set the output directory  [default: .]
   --epochs INTEGER                The number of epochs to train the model
                                   [default: 25]
   --help                          Show this message and exit.
