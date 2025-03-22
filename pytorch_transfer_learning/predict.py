@@ -80,7 +80,7 @@ def set_log_file(ctx, param, value):
 @click.option('--log-level', type=LogLevel(), default=logging.INFO, is_eager=True, callback=set_logging_level, help='Set the log level', show_default=True)
 @click.option('--log-file', type=click.Path(writable=True), is_eager=True, callback=set_log_file, help='Set the log file')
 @click.option('--model', 'model_path', type=click.Path(exists=True, readable=True), help='Set the model')
-@click.argument('image', type=click.Path(exists=True, readable=True), help='Set the image to predict')
+@click.argument('image', type=click.Path(exists=True, readable=True), required=True)
 def main(log_level, log_file, model_path, image):
     """Predict the class of a given image based on the CNN model trained by transfer learning
     for hymenoptera classification.
