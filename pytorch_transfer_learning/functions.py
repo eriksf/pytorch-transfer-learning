@@ -159,6 +159,11 @@ def visualize_model_predictions(device, model, class_names, img_path, output_dir
     model.eval()
     model.to(device)
 
+    path = pathlib.Path(img_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Image file not found: {img_path}")
+    image_name = path.stem
+
     img = Image.open(img_path)
     img = data_transforms['val'](img)
     img = img.unsqueeze(0)
@@ -172,7 +177,7 @@ def visualize_model_predictions(device, model, class_names, img_path, output_dir
         ax.axis('off')
         predicted_class = class_names[preds[0]]
         ax.set_title(f'Predicted: {predicted_class}')
-        output_image_path = os.path.join(output_dir, f"{model.name}_prediction.png")
+        output_image_path = os.path.join(output_dir, f"{model.name}_prediction_{image_name}.png")
         image_show(img.cpu().data[0], output_image_path)
 
     return predicted_class, output_image_path
