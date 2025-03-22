@@ -189,7 +189,7 @@ def load_model(model_path):
     checkpoint = torch.load(model_path)
     class_names = checkpoint['class_names']
 
-    model = models.resnet18(pretained=False)
+    model = models.resnet18(pretrained=False)
     model.fc = nn.Linear(model.fc.in_features, len(class_names))
     model.load_state_dict(checkpoint['state_dict'])
     return model, class_names
