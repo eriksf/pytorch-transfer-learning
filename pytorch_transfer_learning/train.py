@@ -88,8 +88,9 @@ def set_log_file(ctx, param, value):
 @click.option('--data-dir', type=click.Path(exists=True, readable=True, writable=True), default='hymenoptera_data', show_default=True, help='Set the data directory')
 @click.option('--scenario', type=click.Choice(['finetuning', 'fixedfeature']), default='finetuning', help='Transfer learning scenario.', show_default=True)
 @click.option('--model-dir', 'model_dir', type=click.Path(exists=True, readable=True, writable=True), default='.', help='Set the model directory', show_default=True)
+@click.option('--output-dir', type=click.Path(exists=True, readable=True, writable=True), default='.', help='Set the output directory', show_default=True)
 @click.option('--epochs', type=int, default=25, show_default=True, help='The number of epochs to train the model')
-def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
+def main(log_level, log_file, data_dir, scenario, model_dir, output_dir, epochs):
     """Train a CNN for hymenoptera classification using transfer learning
     from the pre-trained model ResNet18.
     """
@@ -111,19 +112,22 @@ def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'val']}
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=4, shuffle=True, num_workers=4) for x in ['train', 'val']}
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
-    console.print(f"\nDataset sizes: {dataset_sizes}")
+    console.print(f"\nData directory: {data_dir}")
+    console.print(f"Dataset sizes: {dataset_sizes}")
     class_names = image_datasets['train'].classes
     console.print(f"Classes: {class_names}")
     console.print(f"Transfer learning scenario: [green]{scenario}[/green]")
+
+    logger.debug(f"Using output directory: {output_dir}")
 
     # Get a batch of training data
     inputs, classes = next(iter(dataloaders['train']))
 
     # Make a grid from batch
     out = torchvision.utils.make_grid(inputs)
-    grid_file_name = 'test_grid.png'
-    image_show(out, grid_file_name, title=[class_names[x] for x in classes])
-    console.print(f"\n[yellow]Example training data grid saved to [bold]'{grid_file_name}'[/bold][/yellow]")
+    grid_file_path = os.path.join(output_dir, 'test_grid.png')
+    image_show(out, grid_file_path, title=[class_names[x] for x in classes])
+    console.print(f"\n[yellow]Example training data grid saved to [bold]'{grid_file_path}'[/bold][/yellow]")
 
     if scenario == "finetuning":
         # Finetuning the convnet
@@ -146,9 +150,9 @@ def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
 
         model_ft = train_model(device, model_ft, dataloaders, dataset_sizes, criterion, optimizer_ft, exp_lr_scheduler, console, epochs)
 
-        prediction_image = f"{model_ft.name}_predictions.png"
-        visualize_model(device, model_ft, dataloaders, class_names, prediction_image)
-        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}'[/bold][/yellow]")
+        prediction_image_path = os.path.join(output_dir, f"{model_ft.name}_predictions.png")
+        visualize_model(device, model_ft, dataloaders, class_names, prediction_image_path)
+        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image_path}'[/bold][/yellow]")
 
         model_path = save_model(model_ft, class_names, f'hymenoptera-{scenario}', model_dir)
         console.print(f"\n[yellow]Model saved to [bold]'{model_path}'[/bold][/yellow]")
@@ -176,9 +180,9 @@ def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
 
         model_conv = train_model(device, model_conv, dataloaders, dataset_sizes, criterion, optimizer_conv, exp_lr_scheduler, console, epochs)
 
-        prediction_image = f"{model_conv.name}_predictions.png"
-        visualize_model(device, model_conv, dataloaders, class_names, prediction_image)
-        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}'[/bold][/yellow]")
+        prediction_image_path = os.path.join(output_dir, f"{model_conv.name}_predictions.png")
+        visualize_model(device, model_conv, dataloaders, class_names, prediction_image_path)
+        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image_path}'[/bold][/yellow]")
 
         model_path = save_model(model_conv, class_names, f'hymenoptera-{scenario}', model_dir)
         console.print(f"\n[yellow]Model saved to [bold]'{model_path}'[/bold][/yellow]")
