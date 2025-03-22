@@ -153,9 +153,6 @@ def visualize_model(device, model, dataloaders, class_names, image_name, num_ima
 
 
 def visualize_model_predictions(device, model, class_names, img_path, output_dir):
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
     model.eval()
     model.to(device)
 
@@ -184,8 +181,6 @@ def visualize_model_predictions(device, model, class_names, img_path, output_dir
 
 
 def save_model(model, class_names, model_name, output_dir):
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
     model_path = os.path.join(output_dir, f"{model_name}.pt")
 
     checkpoint = {
