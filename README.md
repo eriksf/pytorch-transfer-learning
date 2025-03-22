@@ -59,12 +59,15 @@ Options:
   --scenario [finetuning|fixedfeature]
                                   Transfer learning scenario.  [default:
                                   finetuning]
+  --model-dir PATH                Set the model directory  [default: .]
+  --epochs INTEGER                The number of epochs to train the model
+                                  [default: 25]
   --help                          Show this message and exit.
 ```
 
 ```console
 > predict --help
-Usage: predict [OPTIONS]
+Usage: predict [OPTIONS] IMAGE
 
   Predict the class of a given image based on the CNN model trained by
   transfer learning for hymenoptera classification.
@@ -74,7 +77,8 @@ Options:
   --log-level [NOTSET|DEBUG|INFO|WARNING|ERROR|CRITICAL]
                                   Set the log level  [default: 20]
   --log-file PATH                 Set the log file
-  --model PATH                    Set the model
+  --model PATH                    Set the model  [required]
+  --output-dir PATH               Set the output directory  [default: .]
   --help                          Show this message and exit.
 ```
 
