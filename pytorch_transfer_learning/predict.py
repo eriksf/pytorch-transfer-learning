@@ -80,8 +80,9 @@ def set_log_file(ctx, param, value):
 @click.option('--log-level', type=LogLevel(), default=logging.INFO, is_eager=True, callback=set_logging_level, help='Set the log level', show_default=True)
 @click.option('--log-file', type=click.Path(writable=True), is_eager=True, callback=set_log_file, help='Set the log file')
 @click.option('--model', 'model_path', type=click.Path(exists=True, readable=True), required=True, help='Set the model')
+@click.option('--output-dir', type=click.Path(exists=True, readable=True, writable=True), default='.', help='Set the output directory', show_default=True)
 @click.argument('image', type=click.Path(exists=True, readable=True), required=True)
-def main(log_level, log_file, model_path, image):
+def main(log_level, log_file, model_path, output_dir, image):
     """Predict the class of a given image based on the CNN model trained by transfer learning
     for hymenoptera classification.
     """
@@ -103,7 +104,9 @@ def main(log_level, log_file, model_path, image):
 
     model, class_names = load_model(model_path)
 
-    visualize_model_predictions(device, model, class_names, image)
+    predicted_class, predicted_image = visualize_model_predictions(device, model, class_names, image, output_dir)
+    console.print(f'\nPredicted class: [green]{predicted_class}[/green]')
+    console.print(f"\n[yellow]Predicted image saved to [bold]'{predicted_image}'[/bold][/yellow]")
 
 if __name__ == '__main__':
     main()

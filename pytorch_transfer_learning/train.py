@@ -121,9 +121,9 @@ def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
 
     # Make a grid from batch
     out = torchvision.utils.make_grid(inputs)
-    grid_base_name = 'test_grid'
-    image_show(out, grid_base_name, title=[class_names[x] for x in classes])
-    console.print(f"\n[yellow]Example training data grid saved to [bold]'{grid_base_name}.png'[/bold][/yellow]")
+    grid_file_name = 'test_grid.png'
+    image_show(out, grid_file_name, title=[class_names[x] for x in classes])
+    console.print(f"\n[yellow]Example training data grid saved to [bold]'{grid_file_name}'[/bold][/yellow]")
 
     if scenario == "finetuning":
         # Finetuning the convnet
@@ -146,9 +146,9 @@ def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
 
         model_ft = train_model(device, model_ft, dataloaders, dataset_sizes, criterion, optimizer_ft, exp_lr_scheduler, console, epochs)
 
-        prediction_image = f"{model_ft.name}_predictions"
+        prediction_image = f"{model_ft.name}_predictions.png"
         visualize_model(device, model_ft, dataloaders, class_names, prediction_image)
-        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}.png'[/bold][/yellow]")
+        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}'[/bold][/yellow]")
 
         model_path = save_model(model_ft, class_names, f'hymenoptera-{scenario}', model_dir)
         console.print(f"\n[yellow]Model saved to [bold]'{model_path}'[/bold][/yellow]")
@@ -176,9 +176,9 @@ def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
 
         model_conv = train_model(device, model_conv, dataloaders, dataset_sizes, criterion, optimizer_conv, exp_lr_scheduler, console, epochs)
 
-        prediction_image = f"{model_conv.name}_predictions"
+        prediction_image = f"{model_conv.name}_predictions.png"
         visualize_model(device, model_conv, dataloaders, class_names, prediction_image)
-        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}.png'[/bold][/yellow]")
+        console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}'[/bold][/yellow]")
 
         model_path = save_model(model_conv, class_names, f'hymenoptera-{scenario}', model_dir)
         console.print(f"\n[yellow]Model saved to [bold]'{model_path}'[/bold][/yellow]")

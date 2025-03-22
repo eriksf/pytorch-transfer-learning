@@ -42,7 +42,8 @@ def image_show(inp, filename=None, title=None):
     if title is not None:
         plt.title(title)
     if filename:
-        plt.savefig(f"{filename}.png")
+        logger.debug(f"Saving image to {filename}")
+        plt.savefig(f"{filename}")
         plt.clf()
 
 
@@ -151,7 +152,10 @@ def visualize_model(device, model, dataloaders, class_names, image_name, num_ima
         model.train(mode=was_training)
 
 
-def visualize_model_predictions(device, model, class_names, img_path):
+def visualize_model_predictions(device, model, class_names, img_path, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
     model.eval()
     model.to(device)
 
@@ -166,8 +170,12 @@ def visualize_model_predictions(device, model, class_names, img_path):
 
         ax = plt.subplot(2,2,1)
         ax.axis('off')
-        ax.set_title(f'Predicted: {class_names[preds[0]]}')
-        image_show(img.cpu().data[0], f"{model.name}_prediction")
+        predicted_class = class_names[preds[0]]
+        ax.set_title(f'Predicted: {predicted_class}')
+        output_image_path = os.path.join(output_dir, f"{model.name}_prediction.png")
+        image_show(img.cpu().data[0], output_image_path)
+
+    return predicted_class, output_image_path
 
 
 def save_model(model, class_names, model_name, output_dir):
