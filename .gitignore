@@ -241,4 +241,8 @@ pyrightconfig.json
 hymenoptera_data
 *.png
 
+# Pytorch models
+*.pt
+*.pth
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,python,visualstudiocode,asdf

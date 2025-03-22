@@ -48,7 +48,7 @@ from rich.logging import RichHandler
 from torch.optim import lr_scheduler
 from torchvision import datasets, models
 
-from .functions import data_transforms, image_show, train_model, visualize_model
+from .functions import data_transforms, image_show, save_model, train_model, visualize_model
 from .version import __version__
 
 cudnn.benchmark = True
@@ -87,7 +87,9 @@ def set_log_file(ctx, param, value):
 @click.option('--log-file', type=click.Path(writable=True), is_eager=True, callback=set_log_file, help='Set the log file')
 @click.option('--data-dir', type=click.Path(exists=True, readable=True, writable=True), default='hymenoptera_data', show_default=True, help='Set the data directory')
 @click.option('--scenario', type=click.Choice(['finetuning', 'fixedfeature']), default='finetuning', help='Transfer learning scenario.', show_default=True)
-def main(log_level, log_file, data_dir, scenario):
+@click.option('--model-dir', 'model_dir', type=click.Path(exists=True, readable=True, writable=True), default='.', help='Set the model directory', show_default=True)
+@click.option('--epochs', type=int, default=25, show_default=True, help='The number of epochs to train the model')
+def main(log_level, log_file, data_dir, scenario, model_dir, epochs):
     """Train a CNN for hymenoptera classification using transfer learning
     from the pre-trained model ResNet18.
     """
@@ -142,11 +144,14 @@ def main(log_level, log_file, data_dir, scenario):
         # Decay LR by a factor of 0.1 every 7 epochs
         exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
-        model_ft = train_model(device, model_ft, dataloaders, dataset_sizes, criterion, optimizer_ft, exp_lr_scheduler, console, num_epochs=25)
+        model_ft = train_model(device, model_ft, dataloaders, dataset_sizes, criterion, optimizer_ft, exp_lr_scheduler, console, epochs)
 
         prediction_image = f"{model_ft.name}_predictions"
         visualize_model(device, model_ft, dataloaders, class_names, prediction_image)
         console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}.png'[/bold][/yellow]")
+
+        model_path = save_model(model_ft, class_names, f'hymenoptera-{scenario}', model_dir)
+        console.print(f"\n[yellow]Model saved to [bold]'{model_path}'[/bold][/yellow]")
     else:
         # ConvNet as fixed feature extractor
         model_conv = torchvision.models.resnet18(weights='IMAGENET1K_V1')
@@ -169,11 +174,14 @@ def main(log_level, log_file, data_dir, scenario):
         # Decay LR by a factor of 0.1 every 7 epochs
         exp_lr_scheduler = lr_scheduler.StepLR(optimizer_conv, step_size=7, gamma=0.1)
 
-        model_conv = train_model(device, model_conv, dataloaders, dataset_sizes, criterion, optimizer_conv, exp_lr_scheduler, console, num_epochs=25)
+        model_conv = train_model(device, model_conv, dataloaders, dataset_sizes, criterion, optimizer_conv, exp_lr_scheduler, console, epochs)
 
         prediction_image = f"{model_conv.name}_predictions"
         visualize_model(device, model_conv, dataloaders, class_names, prediction_image)
         console.print(f"\n[yellow]Prediction image for '{scenario}' model saved to [bold]'{prediction_image}.png'[/bold][/yellow]")
+
+        model_path = save_model(model_conv, class_names, f'hymenoptera-{scenario}', model_dir)
+        console.print(f"\n[yellow]Model saved to [bold]'{model_path}'[/bold][/yellow]")
 
 if __name__ == '__main__':
     main()

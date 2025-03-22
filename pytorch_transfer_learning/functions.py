@@ -6,8 +6,9 @@ from tempfile import TemporaryDirectory
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import torch.nn as nn
 from PIL import Image
-from torchvision import transforms
+from torchvision import models, transforms
 
 logger = logging.getLogger(__name__)
 
@@ -48,14 +49,14 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
     since = time.time()
 
     # Create a temporary directory to save training checkpoints
-    with TemporaryDirectory() as tempdir:
-        best_model_params_path = os.path.join(tempdir, 'best_model_params.pt')
+    with TemporaryDirectory() as temp_dir:
+        best_model_params_path = os.path.join(temp_dir, 'best_model_params.pt')
 
         torch.save(model.state_dict(), best_model_params_path)
         logger.debug(f"Best model parameters will be saved to {best_model_params_path}")
         best_acc = 0.0
 
-        with console.status("[magenta]Training model...") as status:
+        with console.status(f"[magenta]Training model for {num_epochs} epochs...") as status:
             for epoch in range(num_epochs):
                 status.update(status=f'Training Epoch {epoch}')
                 console.print(f'\nEpoch {epoch}/{num_epochs - 1}')
@@ -118,6 +119,7 @@ def train_model(device, model, dataloaders, dataset_sizes, criterion, optimizer,
 
         # load best model weights
         model.load_state_dict(torch.load(best_model_params_path, weights_only=True))
+
     return model
 
 
@@ -167,3 +169,27 @@ def visualize_model_predictions(device, model, class_names, img_path):
         image_show(img.cpu().data[0], f"{model.name}_custom_prediction")
 
         model.train(mode=was_training)
+
+
+def save_model(model, class_names, model_name, output_dir):
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    model_path = os.path.join(output_dir, f"{model_name}.pt")
+
+    checkpoint = {
+        'state_dict': model.state_dict(),
+        'class_names': class_names
+    }
+
+    torch.save(checkpoint, model_path)
+    logger.debug(f"Model saved to {model_path}")
+    return model_path
+
+def load_model(model_path):
+    checkpoint = torch.load(model_path)
+    class_names = checkpoint['class_names']
+
+    model = models.resnet18(pretained=False)
+    model.fc = nn.Linear(model.fc.in_features, len(class_names))
+    model.load_state_dict(checkpoint['state_dict'])
+    return model, class_names
