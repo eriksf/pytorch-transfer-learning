@@ -245,4 +245,6 @@ hymenoptera_data
 *.pt
 *.pth
 
+.python-version
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,linux,python,visualstudiocode,asdf
