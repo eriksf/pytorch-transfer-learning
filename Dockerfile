@@ -20,7 +20,7 @@ COPY images/ /app/images
 COPY pytorch_transfer_learning /app/pytorch_transfer_learning
 COPY LICENSE \
      README.md \
-     /app
+     /app/
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
