@@ -49,6 +49,32 @@ include = ["pytorch_transfer_learning"]
 [tool.hatch.build.targets.wheel]
 include = ["pytorch_transfer_learning"]
 
+
+[tool.bumpversion]
+current_version = "0.1.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+search = "{current_version}"
+replace = "{new_version}"
+regex = false
+ignore_missing_version = false
+ignore_missing_files = false
+tag = false
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "Bump version: {current_version} → {new_version}"
+allow_dirty = true
+commit = false
+message = "Bump version: {current_version} → {new_version}"
+moveable_tags = []
+commit_args = ""
+setup_hooks = []
+pre_commit_hooks = []
+post_commit_hooks = []
+
+[[tool.bumpversion.files]]
+filename = "pytorch_transfer_learning/version.py"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
@@ -64,5 +90,3 @@ unfixable = ["F401"]
 
 [tool.pytest.ini_options]
 addopts = "--verbose --cov=pytorch_transfer_learning"
-
-[tool.poetry_bumpversion.file."pytorch_transfer_learning/version.py"]
