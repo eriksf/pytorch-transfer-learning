@@ -83,7 +83,7 @@ To update the version, use the `bump-my-version` tool. Use the `show-bump` subco
                ╰─ patch ─ 0.1.1
 ```
 
-To test the version bump before updating anything and show what files will be changed, use the `--dry-run` option to the `bump <version>` command:
+To test the version bump before updating anything and show what files will be changed, use the `--dry-run` option to the `bump <version>` subcommand:
 
 ```console
 > bump-my-version bump patch --dry-run -v
