@@ -35,6 +35,7 @@ These two major transfer learning scenarios look as follows:
 
 import logging
 import os
+import ssl
 
 import click
 import torch
@@ -50,6 +51,9 @@ from torchvision import datasets, models
 
 from .functions import data_transforms, image_show, save_model, train_model, visualize_model
 from .version import __version__
+
+# HACK (don't do this normally): Ignore SSL errors
+ssl._create_default_https_context = ssl._create_unverified_context
 
 cudnn.benchmark = True
 console = Console()
